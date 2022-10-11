@@ -24,8 +24,6 @@ export const ADD_USER = gql`
   }
 `;
 
-//TODO: change these to save book and delete book
-
 export const SAVE_BOOK = gql`
   mutation saveBook($input: Book) {
     saveBook(input: $input) {
