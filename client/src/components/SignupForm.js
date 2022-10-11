@@ -29,21 +29,16 @@ const SignupForm = () => {
   const handleFormSubmit = async (event) => {
     event.preventDefault();
 
-    // check if form has everything (as per react-bootstrap docs)
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
+    // use try/catch instead of promises to handle errors
     try {
+      // execute addUser mutation and pass in variable data from form
       const { data } = await addUser({
         variables: { ...userFormData },
       });
 
       Auth.login(data.addUser.token);
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
       setShowAlert(true);
     }
 
