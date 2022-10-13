@@ -21,6 +21,9 @@ const SavedBooks = () => {
   console.log(userData);
   const [removeBook] = useMutation(REMOVE_BOOK);
 
+  if (!userData?.username) {
+    return <h3>To see your saved books, sign in!</h3>;
+  }
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
   const handleDeleteBook = async (bookId) => {
     const token = Auth.loggedIn() ? Auth.getToken() : null;
