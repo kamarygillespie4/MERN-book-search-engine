@@ -8,13 +8,9 @@ import {
   Card,
   CardColumns,
 } from "react-bootstrap";
-// import Apollo hook and mutation
-import { SAVE_BOOK } from "../utils/mutations";
-import { useMutation } from "@apollo/react-hooks";
 
 import Auth from "../utils/auth";
-//removed saveBook
-import { searchGoogleBooks } from "../utils/API";
+import { saveBook, searchGoogleBooks } from "../utils/API";
 import { saveBookIds, getSavedBookIds } from "../utils/localStorage";
 
 const SearchBooks = () => {
@@ -31,8 +27,6 @@ const SearchBooks = () => {
   useEffect(() => {
     return () => saveBookIds(savedBookIds);
   });
-  // use the SAVE_BOOK mutation
-  const [saveBook] = useMutation(SAVE_BOOK);
 
   // create method to search for books and set state on form submit
   const handleFormSubmit = async (event) => {
@@ -77,15 +71,17 @@ const SearchBooks = () => {
     if (!token) {
       return false;
     }
+
     try {
-      const { data } = await saveBook({
-        variables: { bookData: { ...bookToSave } },
-      });
-      console.log(data);
-      console.log(savedBookIds);
+      const response = await saveBook(bookToSave, token);
+
+      if (!response.ok) {
+        throw new Error("something went wrong!");
+      }
+
+      // if book successfully saves to user's account, save book id to state
       setSavedBookIds([...savedBookIds, bookToSave.bookId]);
     } catch (err) {
-      console.log(err);
       console.error(err);
     }
   };
